@@ -1,6 +1,6 @@
 local M = {}
 
-game_data = {x_walls={}, y_walls={}}
+local game_data = {x_walls={}, y_walls={}}
 local name, pass = "deer", "meow"
 
 local socket = require("socket")
@@ -109,8 +109,6 @@ local function sendMove(dir)
 end
 
 local function sendChat(msg)
-	--msg = msg:gsub('[_%w%g]')
-
 	local _, err = client:send('chat|'..msg..'\n')
 	if err then log('failed to send chat: '..err, 'ERROR') end
 	log('sent chat '..msg, 'INFO')
@@ -120,4 +118,6 @@ M.move = sendMove
 M.chat = sendChat
 M.poll = poll
 M.join = setCreds
+
+M.data = game_data
 return M

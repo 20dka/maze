@@ -1,6 +1,6 @@
 local grid_s = 30
 local chat_buffer = "deer are cute"
-local keepalivetimer = 0
+local keepalivetimer = nil
 
 function love.load()
 	love.window.setMode(800, 800, {resizable=true, vsync=false, minwidth=300, minheight=300})
@@ -50,10 +50,10 @@ function love.draw()
 	end
 
 	-- draw player
-	if game_data.pos_x then
+	if network.data.pos_x then
 		love.graphics.setColor(1,1,1)
-		local x_screen_pos = x_screen_pixel * game_data.pos_x
-		local y_screen_pos = y_screen_pixel * game_data.pos_y
+		local x_screen_pos = x_screen_pixel * network.data.pos_x
+		local y_screen_pos = y_screen_pixel * network.data.pos_y
 
 		love.graphics.ellipse("fill", x_screen_pos+x_screen_pixel/2, y_screen_pos+y_screen_pixel/2, x_screen_pixel/2, y_screen_pixel/2)
 
@@ -61,36 +61,36 @@ function love.draw()
 		love.graphics.setLineWidth(3)
 
 		love.graphics.setColor(0,1,0)
-		if game_data.wall_up then love.graphics.line(x_screen_pos, y_screen_pos, x_screen_pos+x_screen_pixel, y_screen_pos) end
-		if game_data.wall_right then love.graphics.line(x_screen_pos+x_screen_pixel, y_screen_pos+y_screen_pixel, x_screen_pos+x_screen_pixel, y_screen_pos) end
-		if game_data.wall_down then love.graphics.line(x_screen_pos, y_screen_pos+y_screen_pixel, x_screen_pos+x_screen_pixel, y_screen_pos+y_screen_pixel) end
-		if game_data.wall_left then love.graphics.line(x_screen_pos, y_screen_pos, x_screen_pos, y_screen_pos+y_screen_pixel) end
+		if network.data.wall_up then love.graphics.line(x_screen_pos, y_screen_pos, x_screen_pos+x_screen_pixel, y_screen_pos) end
+		if network.data.wall_right then love.graphics.line(x_screen_pos+x_screen_pixel, y_screen_pos+y_screen_pixel, x_screen_pos+x_screen_pixel, y_screen_pos) end
+		if network.data.wall_down then love.graphics.line(x_screen_pos, y_screen_pos+y_screen_pixel, x_screen_pos+x_screen_pixel, y_screen_pos+y_screen_pixel) end
+		if network.data.wall_left then love.graphics.line(x_screen_pos, y_screen_pos, x_screen_pos, y_screen_pos+y_screen_pixel) end
 	end
 
 	-- draw other walls
-	if game_data.x_walls then
+	if network.data.x_walls then
 		love.graphics.setLineWidth(1)
-		for _, coords in pairs(game_data.x_walls) do
+		for _, coords in pairs(network.data.x_walls) do
 			love.graphics.line(coords.x*x_screen_pixel, coords.y*y_screen_pixel, coords.x*x_screen_pixel+x_screen_pixel, coords.y*y_screen_pixel)
 		end
 	
-		for _, coords in pairs(game_data.y_walls) do
+		for _, coords in pairs(network.data.y_walls) do
 			love.graphics.line(coords.x*x_screen_pixel, coords.y*y_screen_pixel, coords.x*x_screen_pixel, coords.y*y_screen_pixel+y_screen_pixel)
 		end
 	end
 
-	if game_data.goal_x then
+	if network.data.goal_x then
 
-		local x_screen_goal = x_screen_pixel * (game_data.goal_x or 1)
-		local y_screen_goal = y_screen_pixel * (game_data.goal_y or 1)
+		local x_screen_goal = x_screen_pixel * (network.data.goal_x or 1)
+		local y_screen_goal = y_screen_pixel * (network.data.goal_y or 1)
 
 		love.graphics.setColor(1,0,0)
 		love.graphics.rectangle("fill", x_screen_goal+x_screen_pixel/4, y_screen_goal+y_screen_pixel/4, x_screen_pixel/2, y_screen_pixel/2)
 	end
 
-	if game_data.start_x then
-		local x_screen_start = x_screen_pixel * (game_data.start_x or 1)
-		local y_screen_start = y_screen_pixel * (game_data.start_y or 1)
+	if network.data.start_x then
+		local x_screen_start = x_screen_pixel * (network.data.start_x or 1)
+		local y_screen_start = y_screen_pixel * (network.data.start_y or 1)
 
 		love.graphics.setColor(0,0,1)
 		love.graphics.rectangle("fill", x_screen_start+x_screen_pixel/4, y_screen_start+y_screen_pixel/4, x_screen_pixel/2, y_screen_pixel/2)
