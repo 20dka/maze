@@ -57,3 +57,7 @@ function split_fn(s, sep)
 
 	return fields
 end
+
+function subset_fn(t, from, to)
+	return { unpack(t, from, to) }
+end
